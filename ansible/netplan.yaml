@@ -1,0 +1,15 @@
+---
+- name: Ensure 50-ifup-hooks exists
+  hosts: dl380
+  become: true
+  tasks:
+    - name: Ensure directory exists
+      ansible.builtin.file:
+        path: /etc/networkd-dispatcher/routable.d
+        state: directory
+
+    - name: Add command to 50-ifup-hooks
+      ansible.builtin.lineinfile:
+        path: /etc/networkd-dispatcher/routable.d/50-ifup-hooks
+        line: '/usr/bin/systemctl restart frr'
+        create: true

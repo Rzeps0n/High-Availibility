@@ -1,0 +1,35 @@
+---
+- name: Configure openfabric routing between nodes
+  hosts: dl380
+  become: true
+  tasks:
+    - name: Load FRR interface variables
+      include_vars:
+        file: "vars/frr_interfaces.yaml"
+        name: frr_interfaces
+
+    - name: Set FRR interface variables
+      set_fact:
+        lo_ip: "{{ frr_interfaces[inventory_hostname]['lo_ip'] }}"
+        interface1: "{{ frr_interfaces[inventory_hostname]['interface1'] }}"
+        interface2: "{{ frr_interfaces[inventory_hostname]['interface2'] }}"
+        net: "{{ frr_interfaces[inventory_hostname]['net'] }}"
+
+    - name: Enable the OpenFabric daemon
+      lineinfile:
+        path: /etc/frr/daemons
+        regexp: '^fabricd='
+        line: 'fabricd=true'
+        state: present
+
+    - name: Generate FRR configuration
+      template:
+        src: templates/frr.conf.j2
+        dest: /etc/frr/frr.conf
+      notify:
+        - restart frr
+  handlers:
+    - name: restart frr
+      service:
+        name: frr
+        state: restarted
