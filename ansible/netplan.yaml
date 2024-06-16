@@ -1,5 +1,5 @@
 ---
-- name: Ensure 50-ifup-hooks exists
+- name: Creae ifup-hooks
   hosts: dl380
   become: true
   tasks:
@@ -9,7 +9,39 @@
         state: directory
 
     - name: Add command to 50-ifup-hooks
-      ansible.builtin.lineinfile:
+      lineinfile:
         path: /etc/networkd-dispatcher/routable.d/50-ifup-hooks
         line: '/usr/bin/systemctl restart frr'
+        state: present
         create: true
+
+- name: Configure netplan configuration
+  hosts: dl380
+  become: true
+
+  tasks:
+    - name: Create netplan configuration file
+      template:
+        src: templates/50-cloud-init.yaml
+        dest: /etc/netplan/50-cloud-init.yaml
+        owner: root
+        group: root
+        mode: '0600'
+
+    - name: Apply netplan configuration
+      command: netplan apply
+      register: netplan_apply
+      changed_when: netplan_apply.rc == 0
+      notify: Restart networking
+
+    - name: Debug current netplan configuration
+      command: netplan get
+      register: current_netplan_config
+
+    - name: Show current netplan configuration
+      debug:
+        var: current_netplan_config.stdout
+
+  handlers:
+    - name: Restart networking
+      command: systemctl restart systemd-networkd

@@ -1,10 +1,9 @@
 ---
-#run with -K parameter!
+# run with -K parameter!
 - name: Install and configure doas, remove sudo
   hosts: all
   become: true
   tasks:
-  
     - name: Add alias to .bashrc for user
       lineinfile:
         path: ~/.bashrc

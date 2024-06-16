@@ -1,3 +1,4 @@
+conf t
 frr defaults traditional
 hostname {{ inventory_hostname }}
 log syslog warning
@@ -29,3 +30,4 @@ router openfabric 1
  lsp-gen-interval 1
  max-lsp-lifetime 600
  lsp-refresh-interval 180
+end
