@@ -1,10 +1,18 @@
 ---
 packages:
-  - iperf3
+  - pacemaker
+  - corosync
+  - kvm
+  - libvirt-bin
+  - qemu-kvm
+  - bridge-utils
+  - virt-manager
+  - drbd-utils
+  - linux-headers-6.8.0-36-generic
   - frr
   - python3
   - doas
-  - qemu-system
+#native ubuntu apps, do not modify
   - apparmor
   - apport
   - apt
