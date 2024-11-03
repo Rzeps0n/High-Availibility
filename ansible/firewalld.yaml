@@ -27,6 +27,12 @@
         state: present
         permanent: true
 
+    - name: Create cluster zone
+      ansible.builtin.firewalld:
+        zone: cluster
+        state: present
+        permanent: true
+
     - name: Remove interfaces from public zone
       ansible.builtin.shell: |
         for iface in $(firewall-cmd --zone=public --list-interfaces); do
@@ -40,22 +46,14 @@
         state: enabled
         permanent: true
 
-    - name: Allow services on mgmt zone
+    - name: Assign interfaces to mgmt zone (clear other interfaces)
       ansible.builtin.firewalld:
         zone: mgmt
-        service: "{{ item }}"
+        interface: "{{ item }}"
         state: enabled
         permanent: true
       loop:
-        - cockpit
-        - dhcpv6-client
-        - ssh
-
-    - name: Create cluster zone
-      ansible.builtin.firewalld:
-        zone: cluster
-        state: present
-        permanent: true
+        - bond0
 
     - name: Assign interfaces to cluster zone
       ansible.builtin.firewalld:
@@ -67,6 +65,17 @@
         - "{{ frr_interfaces[inventory_hostname]['interface1'] }}"
         - "{{ frr_interfaces[inventory_hostname]['interface2'] }}"
 
+    - name: Allow services on mgmt zone
+      ansible.builtin.firewalld:
+        zone: mgmt
+        service: "{{ item }}"
+        state: enabled
+        permanent: true
+      loop:
+        - cockpit
+        - dhcpv6-client
+        - ssh
+
         #    - name: Allow frr service on cluster zone
         #      ansible.builtin.firewalld:
         #        zone: cluster
@@ -77,24 +86,15 @@
     - name: Open port 5201 for iperf3 on cluster zone
       ansible.builtin.firewalld:
         zone: cluster
-        port: "{{ item }}"
+        port: 5201/tcp
         state: enabled
         permanent: true
-      loop:
-        - 5201/tcp
-        - 5201/udp
 
     - name: Reload firewalld to apply changes
       ansible.builtin.command: firewall-cmd --reload
 
     - name: Set mgmt as the default firewalld zone
       ansible.builtin.command: firewall-cmd --set-default-zone=mgmt
-
-    - name: Remove public zone
-      ansible.builtin.firewalld:
-        zone: public
-        state: absent
-        permanent: true
 
   handlers:
     - name: Restart firewalld
