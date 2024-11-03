@@ -1,0 +1,103 @@
+---
+- name: Configure firewalld for Rocky Linux
+  hosts: all
+  become: true
+  tasks:
+    - name: Load FRR interface variables
+      include_vars:
+        file: "vars/frr_interfaces.yaml"
+        name: frr_interfaces
+
+    - name: Ensure firewalld is installed and running
+      ansible.builtin.yum:
+        name: firewalld
+        state: present
+      notify:
+        - Restart firewalld
+
+    - name: Start and enable firewalld
+      ansible.builtin.service:
+        name: firewalld
+        state: started
+        enabled: true
+
+    - name: Create mgmt zone
+      ansible.builtin.firewalld:
+        zone: mgmt
+        state: present
+        permanent: true
+
+    - name: Remove interfaces from public zone
+      ansible.builtin.shell: |
+        for iface in $(firewall-cmd --zone=public --list-interfaces); do
+          firewall-cmd --zone=public --remove-interface=$iface --permanent;
+        done
+
+    - name: Assign bond0 interface to mgmt zone
+      ansible.builtin.firewalld:
+        zone: mgmt
+        interface: bond0
+        state: enabled
+        permanent: true
+
+    - name: Allow services on mgmt zone
+      ansible.builtin.firewalld:
+        zone: mgmt
+        service: "{{ item }}"
+        state: enabled
+        permanent: true
+      loop:
+        - cockpit
+        - dhcpv6-client
+        - ssh
+
+    - name: Create cluster zone
+      ansible.builtin.firewalld:
+        zone: cluster
+        state: present
+        permanent: true
+
+    - name: Assign interfaces to cluster zone
+      ansible.builtin.firewalld:
+        zone: cluster
+        interface: "{{ item }}"
+        state: enabled
+        permanent: true
+      loop:
+        - "{{ frr_interfaces[inventory_hostname]['interface1'] }}"
+        - "{{ frr_interfaces[inventory_hostname]['interface2'] }}"
+
+        #    - name: Allow frr service on cluster zone
+        #      ansible.builtin.firewalld:
+        #        zone: cluster
+        #        service: frr
+        #        state: enabled
+        #        permanent: true
+
+    - name: Open port 5201 for iperf3 on cluster zone
+      ansible.builtin.firewalld:
+        zone: cluster
+        port: "{{ item }}"
+        state: enabled
+        permanent: true
+      loop:
+        - 5201/tcp
+        - 5201/udp
+
+    - name: Reload firewalld to apply changes
+      ansible.builtin.command: firewall-cmd --reload
+
+    - name: Set mgmt as the default firewalld zone
+      ansible.builtin.command: firewall-cmd --set-default-zone=mgmt
+
+    - name: Remove public zone
+      ansible.builtin.firewalld:
+        zone: public
+        state: absent
+        permanent: true
+
+  handlers:
+    - name: Restart firewalld
+      ansible.builtin.service:
+        name: firewalld
+        state: restarted
