@@ -33,11 +33,26 @@
         state: present
         permanent: true
 
-    - name: Remove interfaces from public zone
+    - name: Remove all interfaces from mgmt zone
+      ansible.builtin.shell: |
+        for iface in $(firewall-cmd --zone=mgmt --list-interfaces); do
+          firewall-cmd --zone=mgmt --remove-interface=$iface --permanent;
+        done
+
+    - name: Remove all interfaces from cluster zone
+      ansible.builtin.shell: |
+        for iface in $(firewall-cmd --zone=cluster --list-interfaces); do
+          firewall-cmd --zone=cluster --remove-interface=$iface --permanent;
+        done
+
+    - name: Remove all interfaces from public zone
       ansible.builtin.shell: |
         for iface in $(firewall-cmd --zone=public --list-interfaces); do
           firewall-cmd --zone=public --remove-interface=$iface --permanent;
         done
+
+    - name: Reload firewalld to apply removals
+      ansible.builtin.command: firewall-cmd --reload
 
     - name: Assign bond0 interface to mgmt zone
       ansible.builtin.firewalld:
@@ -45,15 +60,6 @@
         interface: bond0
         state: enabled
         permanent: true
-
-    - name: Assign interfaces to mgmt zone (clear other interfaces)
-      ansible.builtin.firewalld:
-        zone: mgmt
-        interface: "{{ item }}"
-        state: enabled
-        permanent: true
-      loop:
-        - bond0
 
     - name: Assign interfaces to cluster zone
       ansible.builtin.firewalld:
@@ -75,13 +81,6 @@
         - cockpit
         - dhcpv6-client
         - ssh
-
-        #    - name: Allow frr service on cluster zone
-        #      ansible.builtin.firewalld:
-        #        zone: cluster
-        #        service: frr
-        #        state: enabled
-        #        permanent: true
 
     - name: Open port 5201 for iperf3 on cluster zone
       ansible.builtin.firewalld:

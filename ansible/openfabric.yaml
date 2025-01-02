@@ -28,8 +28,15 @@
         dest: /etc/frr/frr.conf
       notify:
         - restart frr
+
+    - name: Ensure FRR service starts on boot
+      service:
+        name: frr
+        enabled: true
+
   handlers:
     - name: restart frr
       service:
         name: frr
         state: restarted
+
