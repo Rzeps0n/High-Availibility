@@ -1,0 +1,20 @@
+2025-01-05 12:38:44 starting migration of VM 103 to node 'dl380-2' (10.0.0.2)
+2025-01-05 12:38:44 starting VM 103 on remote node 'dl380-2'
+2025-01-05 12:38:46 start remote tunnel
+2025-01-05 12:38:47 ssh tunnel ver 1
+2025-01-05 12:38:47 starting online/live migration on unix:/run/qemu-server/103.migrate
+2025-01-05 12:38:47 set migration capabilities
+2025-01-05 12:38:47 migration downtime limit: 100 ms
+2025-01-05 12:38:47 migration cachesize: 4.0 GiB
+2025-01-05 12:38:47 set migration parameters
+2025-01-05 12:38:47 start migrate command to unix:/run/qemu-server/103.migrate
+2025-01-05 12:38:48 migration active, transferred 242.9 MiB of 32.0 GiB VM-state, 361.7 MiB/s
+2025-01-05 12:38:49 migration active, transferred 424.6 MiB of 32.0 GiB VM-state, 13.9 GiB/s
+2025-01-05 12:38:50 migration active, transferred 455.9 MiB of 32.0 GiB VM-state, 14.0 GiB/s
+2025-01-05 12:38:51 migration active, transferred 656.9 MiB of 32.0 GiB VM-state, 379.9 MiB/s
+2025-01-05 12:38:53 migration active, transferred 1.2 GiB of 32.0 GiB VM-state, 407.8 MiB/s
+2025-01-05 12:38:54 migration active, transferred 1.6 GiB of 32.0 GiB VM-state, 365.6 MiB/s
+2025-01-05 12:38:54 average migration speed: 4.6 GiB/s - downtime 142 ms
+2025-01-05 12:38:54 migration status: completed
+2025-01-05 12:38:57 migration finished successfully (duration 00:00:14)
+TASK OK

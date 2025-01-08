@@ -1,0 +1,140 @@
+2025-01-05 03:25:54 starting migration of VM 103 to node 'dl380-2' (10.0.0.2)
+2025-01-05 03:25:54 starting VM 103 on remote node 'dl380-2'
+2025-01-05 03:25:57 start remote tunnel
+2025-01-05 03:25:58 ssh tunnel ver 1
+2025-01-05 03:25:58 starting online/live migration on unix:/run/qemu-server/103.migrate
+2025-01-05 03:25:58 set migration capabilities
+2025-01-05 03:25:58 migration downtime limit: 100 ms
+2025-01-05 03:25:58 migration cachesize: 2.0 GiB
+2025-01-05 03:25:58 set migration parameters
+2025-01-05 03:25:58 start migrate command to unix:/run/qemu-server/103.migrate
+2025-01-05 03:25:59 migration active, transferred 268.2 MiB of 16.0 GiB VM-state, 507.3 MiB/s
+2025-01-05 03:26:00 migration active, transferred 595.7 MiB of 16.0 GiB VM-state, 5.9 GiB/s
+2025-01-05 03:26:01 migration active, transferred 971.7 MiB of 16.0 GiB VM-state, 376.3 MiB/s
+2025-01-05 03:26:02 migration active, transferred 1.3 GiB of 16.0 GiB VM-state, 377.5 MiB/s
+2025-01-05 03:26:03 migration active, transferred 1.6 GiB of 16.0 GiB VM-state, 504.9 MiB/s
+2025-01-05 03:26:04 migration active, transferred 2.0 GiB of 16.0 GiB VM-state, 946.7 MiB/s
+2025-01-05 03:26:05 migration active, transferred 2.4 GiB of 16.0 GiB VM-state, 1.5 GiB/s
+2025-01-05 03:26:06 migration active, transferred 2.7 GiB of 16.0 GiB VM-state, 373.9 MiB/s
+2025-01-05 03:26:07 migration active, transferred 3.0 GiB of 16.0 GiB VM-state, 378.7 MiB/s
+2025-01-05 03:26:08 migration active, transferred 3.4 GiB of 16.0 GiB VM-state, 367.9 MiB/s
+2025-01-05 03:26:09 migration active, transferred 3.8 GiB of 16.0 GiB VM-state, 366.6 MiB/s
+2025-01-05 03:26:10 migration active, transferred 4.1 GiB of 16.0 GiB VM-state, 383.6 MiB/s
+2025-01-05 03:26:11 migration active, transferred 4.5 GiB of 16.0 GiB VM-state, 381.1 MiB/s
+2025-01-05 03:26:12 migration active, transferred 4.9 GiB of 16.0 GiB VM-state, 378.7 MiB/s
+2025-01-05 03:26:13 migration active, transferred 5.3 GiB of 16.0 GiB VM-state, 764.9 MiB/s
+2025-01-05 03:26:13 xbzrle: send updates to 85422 pages in 328.6 MiB encoded memory, cache-miss 98.70%, overflow 84035
+2025-01-05 03:26:14 migration active, transferred 5.6 GiB of 16.0 GiB VM-state, 762.3 MiB/s
+2025-01-05 03:26:14 xbzrle: send updates to 184389 pages in 715.2 MiB encoded memory, cache-miss 98.70%, overflow 182995
+2025-01-05 03:26:15 migration active, transferred 6.0 GiB of 16.0 GiB VM-state, 700.5 MiB/s
+2025-01-05 03:26:15 xbzrle: send updates to 276933 pages in 1.1 GiB encoded memory, cache-miss 98.70%, overflow 275540
+2025-01-05 03:26:16 migration active, transferred 6.4 GiB of 16.0 GiB VM-state, 760.3 MiB/s
+2025-01-05 03:26:16 xbzrle: send updates to 373897 pages in 1.4 GiB encoded memory, cache-miss 98.70%, overflow 372501
+2025-01-05 03:26:17 migration active, transferred 6.8 GiB of 16.0 GiB VM-state, 378.7 MiB/s
+2025-01-05 03:26:17 xbzrle: send updates to 405553 pages in 1.5 GiB encoded memory, cache-miss 17.50%, overflow 404157
+2025-01-05 03:26:18 migration active, transferred 7.1 GiB of 16.0 GiB VM-state, 738.0 MiB/s
+2025-01-05 03:26:18 xbzrle: send updates to 469729 pages in 1.8 GiB encoded memory, cache-miss 17.50%, overflow 467558
+2025-01-05 03:26:20 migration active, transferred 7.5 GiB of 16.0 GiB VM-state, 769.8 MiB/s
+2025-01-05 03:26:20 xbzrle: send updates to 568629 pages in 2.2 GiB encoded memory, cache-miss 17.50%, overflow 566203
+2025-01-05 03:26:21 migration active, transferred 7.9 GiB of 16.0 GiB VM-state, 757.4 MiB/s
+2025-01-05 03:26:21 xbzrle: send updates to 669132 pages in 2.5 GiB encoded memory, cache-miss 17.50%, overflow 666700
+2025-01-05 03:26:22 migration active, transferred 8.3 GiB of 16.0 GiB VM-state, 769.8 MiB/s
+2025-01-05 03:26:22 xbzrle: send updates to 763173 pages in 2.9 GiB encoded memory, cache-miss 17.50%, overflow 760738
+2025-01-05 03:26:23 migration active, transferred 8.7 GiB of 16.0 GiB VM-state, 381.1 MiB/s
+2025-01-05 03:26:23 xbzrle: send updates to 797886 pages in 3.0 GiB encoded memory, cache-miss 17.96%, overflow 795451
+2025-01-05 03:26:24 migration active, transferred 9.0 GiB of 16.0 GiB VM-state, 747.7 MiB/s
+2025-01-05 03:26:24 xbzrle: send updates to 867967 pages in 3.3 GiB encoded memory, cache-miss 17.96%, overflow 864825
+2025-01-05 03:26:25 migration active, transferred 9.4 GiB of 16.0 GiB VM-state, 757.4 MiB/s
+2025-01-05 03:26:25 xbzrle: send updates to 967242 pages in 3.7 GiB encoded memory, cache-miss 17.96%, overflow 964094
+2025-01-05 03:26:26 migration active, transferred 9.8 GiB of 16.0 GiB VM-state, 755.1 MiB/s
+2025-01-05 03:26:26 xbzrle: send updates to 1066627 pages in 4.1 GiB encoded memory, cache-miss 17.96%, overflow 1063479
+2025-01-05 03:26:27 migration active, transferred 10.2 GiB of 16.0 GiB VM-state, 729.7 MiB/s
+2025-01-05 03:26:27 xbzrle: send updates to 1157266 pages in 4.4 GiB encoded memory, cache-miss 17.96%, overflow 1154114
+2025-01-05 03:26:28 migration active, transferred 10.5 GiB of 16.0 GiB VM-state, 373.9 MiB/s, VM dirties lots of memory: 382.3 MiB/s
+2025-01-05 03:26:28 xbzrle: send updates to 1175689 pages in 4.5 GiB encoded memory, cache-miss 20.78%, overflow 1172538
+2025-01-05 03:26:29 migration active, transferred 10.9 GiB of 16.0 GiB VM-state, 742.9 MiB/s
+2025-01-05 03:26:29 xbzrle: send updates to 1254759 pages in 4.8 GiB encoded memory, cache-miss 20.78%, overflow 1250272
+2025-01-05 03:26:30 migration active, transferred 11.3 GiB of 16.0 GiB VM-state, 752.6 MiB/s
+2025-01-05 03:26:30 xbzrle: send updates to 1350494 pages in 5.1 GiB encoded memory, cache-miss 20.78%, overflow 1346001
+2025-01-05 03:26:31 migration active, transferred 11.7 GiB of 16.0 GiB VM-state, 757.4 MiB/s
+2025-01-05 03:26:31 xbzrle: send updates to 1446973 pages in 5.5 GiB encoded memory, cache-miss 20.78%, overflow 1442480
+2025-01-05 03:26:32 migration active, transferred 12.0 GiB of 16.0 GiB VM-state, 726.9 MiB/s
+2025-01-05 03:26:32 xbzrle: send updates to 1538341 pages in 5.9 GiB encoded memory, cache-miss 20.78%, overflow 1533845
+2025-01-05 03:26:32 auto-increased downtime to continue migration: 200 ms
+2025-01-05 03:26:33 migration active, transferred 12.4 GiB of 16.0 GiB VM-state, 376.3 MiB/s
+2025-01-05 03:26:33 xbzrle: send updates to 1557252 pages in 5.9 GiB encoded memory, cache-miss 20.04%, overflow 1552756
+2025-01-05 03:26:34 migration active, transferred 12.8 GiB of 16.0 GiB VM-state, 747.7 MiB/s
+2025-01-05 03:26:34 xbzrle: send updates to 1638352 pages in 6.2 GiB encoded memory, cache-miss 20.04%, overflow 1633168
+2025-01-05 03:26:35 migration active, transferred 13.1 GiB of 16.0 GiB VM-state, 747.4 MiB/s
+2025-01-05 03:26:35 xbzrle: send updates to 1735400 pages in 6.6 GiB encoded memory, cache-miss 20.04%, overflow 1730210
+2025-01-05 03:26:36 migration active, transferred 13.5 GiB of 16.0 GiB VM-state, 764.9 MiB/s
+2025-01-05 03:26:36 xbzrle: send updates to 1830680 pages in 7.0 GiB encoded memory, cache-miss 20.04%, overflow 1825490
+2025-01-05 03:26:37 migration active, transferred 13.9 GiB of 16.0 GiB VM-state, 709.6 MiB/s
+2025-01-05 03:26:37 xbzrle: send updates to 1921597 pages in 7.3 GiB encoded memory, cache-miss 20.04%, overflow 1916403
+2025-01-05 03:26:38 migration active, transferred 14.3 GiB of 16.0 GiB VM-state, 384.9 MiB/s
+2025-01-05 03:26:38 xbzrle: send updates to 1931988 pages in 7.4 GiB encoded memory, cache-miss 18.71%, overflow 1926795
+2025-01-05 03:26:39 migration active, transferred 14.6 GiB of 16.0 GiB VM-state, 752.6 MiB/s
+2025-01-05 03:26:39 xbzrle: send updates to 2013518 pages in 7.7 GiB encoded memory, cache-miss 18.71%, overflow 2007438
+2025-01-05 03:26:40 migration active, transferred 15.0 GiB of 16.0 GiB VM-state, 762.0 MiB/s
+2025-01-05 03:26:40 xbzrle: send updates to 2110731 pages in 8.0 GiB encoded memory, cache-miss 18.71%, overflow 2104644
+2025-01-05 03:26:41 migration active, transferred 15.4 GiB of 16.0 GiB VM-state, 726.2 MiB/s
+2025-01-05 03:26:41 xbzrle: send updates to 2206326 pages in 8.4 GiB encoded memory, cache-miss 18.71%, overflow 2200240
+2025-01-05 03:26:42 migration active, transferred 15.8 GiB of 16.0 GiB VM-state, 551.8 MiB/s
+2025-01-05 03:26:42 xbzrle: send updates to 2289315 pages in 8.7 GiB encoded memory, cache-miss 22.84%, overflow 2283226
+2025-01-05 03:26:43 migration active, transferred 16.1 GiB of 16.0 GiB VM-state, 380.3 MiB/s, VM dirties lots of memory: 390.3 MiB/s
+2025-01-05 03:26:43 xbzrle: send updates to 2293369 pages in 8.7 GiB encoded memory, cache-miss 22.84%, overflow 2286847
+2025-01-05 03:26:44 migration active, transferred 16.5 GiB of 16.0 GiB VM-state, 757.4 MiB/s
+2025-01-05 03:26:44 xbzrle: send updates to 2385561 pages in 9.1 GiB encoded memory, cache-miss 22.84%, overflow 2378630
+2025-01-05 03:26:45 migration active, transferred 16.9 GiB of 16.0 GiB VM-state, 752.6 MiB/s
+2025-01-05 03:26:45 xbzrle: send updates to 2482432 pages in 9.4 GiB encoded memory, cache-miss 22.84%, overflow 2475495
+2025-01-05 03:26:46 migration active, transferred 17.3 GiB of 16.0 GiB VM-state, 740.5 MiB/s
+2025-01-05 03:26:46 xbzrle: send updates to 2576611 pages in 9.8 GiB encoded memory, cache-miss 22.84%, overflow 2569671
+2025-01-05 03:26:47 migration active, transferred 17.6 GiB of 16.0 GiB VM-state, 375.1 MiB/s
+2025-01-05 03:26:47 xbzrle: send updates to 2651368 pages in 10.1 GiB encoded memory, cache-miss 25.79%, overflow 2644428
+2025-01-05 03:26:48 migration active, transferred 18.0 GiB of 16.0 GiB VM-state, 694.9 MiB/s
+2025-01-05 03:26:48 xbzrle: send updates to 2665028 pages in 10.1 GiB encoded memory, cache-miss 25.79%, overflow 2657180
+2025-01-05 03:26:49 migration active, transferred 18.4 GiB of 16.0 GiB VM-state, 718.6 MiB/s
+2025-01-05 03:26:49 xbzrle: send updates to 2755961 pages in 10.5 GiB encoded memory, cache-miss 25.79%, overflow 2748107
+2025-01-05 03:26:50 migration active, transferred 18.8 GiB of 16.0 GiB VM-state, 757.4 MiB/s
+2025-01-05 03:26:50 xbzrle: send updates to 2846123 pages in 10.8 GiB encoded memory, cache-miss 25.79%, overflow 2838264
+2025-01-05 03:26:51 migration active, transferred 19.1 GiB of 16.0 GiB VM-state, 736.5 MiB/s
+2025-01-05 03:26:51 xbzrle: send updates to 2940784 pages in 11.2 GiB encoded memory, cache-miss 25.79%, overflow 2932922
+2025-01-05 03:26:52 migration active, transferred 19.5 GiB of 16.0 GiB VM-state, 388.4 MiB/s
+2025-01-05 03:26:52 xbzrle: send updates to 2989730 pages in 11.4 GiB encoded memory, cache-miss 27.53%, overflow 2981868
+2025-01-05 03:26:53 migration active, transferred 19.9 GiB of 16.0 GiB VM-state, 762.4 MiB/s
+2025-01-05 03:26:53 xbzrle: send updates to 3034996 pages in 11.5 GiB encoded memory, cache-miss 27.53%, overflow 3025543
+2025-01-05 03:26:54 migration active, transferred 20.3 GiB of 16.0 GiB VM-state, 715.8 MiB/s
+2025-01-05 03:26:54 xbzrle: send updates to 3127847 pages in 11.9 GiB encoded memory, cache-miss 27.53%, overflow 3118394
+2025-01-05 03:26:55 migration active, transferred 20.6 GiB of 16.0 GiB VM-state, 757.4 MiB/s
+2025-01-05 03:26:55 xbzrle: send updates to 3209675 pages in 12.2 GiB encoded memory, cache-miss 27.53%, overflow 3200216
+2025-01-05 03:26:56 migration active, transferred 21.0 GiB of 16.0 GiB VM-state, 742.1 MiB/s
+2025-01-05 03:26:56 xbzrle: send updates to 3303473 pages in 12.6 GiB encoded memory, cache-miss 29.34%, overflow 3290000
+2025-01-05 03:26:58 migration active, transferred 21.4 GiB of 16.0 GiB VM-state, 632.7 MiB/s
+2025-01-05 03:26:58 xbzrle: send updates to 3337552 pages in 12.7 GiB encoded memory, cache-miss 29.34%, overflow 3322102
+2025-01-05 03:26:59 migration active, transferred 21.7 GiB of 16.0 GiB VM-state, 584.7 MiB/s
+2025-01-05 03:26:59 xbzrle: send updates to 3427465 pages in 13.0 GiB encoded memory, cache-miss 29.34%, overflow 3410505
+2025-01-05 03:26:59 auto-increased downtime to continue migration: 400 ms
+2025-01-05 03:27:00 migration active, transferred 22.1 GiB of 16.0 GiB VM-state, 691.3 MiB/s
+2025-01-05 03:27:00 xbzrle: send updates to 3519590 pages in 13.3 GiB encoded memory, cache-miss 29.74%, overflow 3490836
+2025-01-05 03:27:01 migration active, transferred 22.5 GiB of 16.0 GiB VM-state, 586.6 MiB/s
+2025-01-05 03:27:01 xbzrle: send updates to 3576792 pages in 13.5 GiB encoded memory, cache-miss 29.74%, overflow 3545856
+2025-01-05 03:27:02 migration active, transferred 22.9 GiB of 16.0 GiB VM-state, 613.9 MiB/s
+2025-01-05 03:27:02 xbzrle: send updates to 3647216 pages in 13.8 GiB encoded memory, cache-miss 29.74%, overflow 3614768
+2025-01-05 03:27:03 migration active, transferred 23.2 GiB of 16.0 GiB VM-state, 813.5 MiB/s
+2025-01-05 03:27:03 xbzrle: send updates to 3726158 pages in 14.1 GiB encoded memory, cache-miss 32.93%, overflow 3682629
+2025-01-05 03:27:04 migration active, transferred 23.6 GiB of 16.0 GiB VM-state, 654.5 MiB/s
+2025-01-05 03:27:04 xbzrle: send updates to 3811454 pages in 14.3 GiB encoded memory, cache-miss 32.93%, overflow 3760464
+2025-01-05 03:27:05 migration active, transferred 24.0 GiB of 16.0 GiB VM-state, 534.3 MiB/s
+2025-01-05 03:27:05 xbzrle: send updates to 3879296 pages in 14.6 GiB encoded memory, cache-miss 32.93%, overflow 3825696
+2025-01-05 03:27:06 migration active, transferred 24.4 GiB of 16.0 GiB VM-state, 752.2 MiB/s
+2025-01-05 03:27:06 xbzrle: send updates to 3965253 pages in 14.9 GiB encoded memory, cache-miss 27.24%, overflow 3907726
+2025-01-05 03:27:07 migration active, transferred 24.7 GiB of 16.0 GiB VM-state, 639.6 MiB/s
+2025-01-05 03:27:07 xbzrle: send updates to 4036434 pages in 15.1 GiB encoded memory, cache-miss 25.44%, overflow 3970794
+2025-01-05 03:27:08 migration active, transferred 25.1 GiB of 16.0 GiB VM-state, 456.0 MiB/s
+2025-01-05 03:27:08 xbzrle: send updates to 4108283 pages in 15.4 GiB encoded memory, cache-miss 32.14%, overflow 4037109
+2025-01-05 03:27:09 migration active, transferred 25.5 GiB of 16.0 GiB VM-state, 735.1 MiB/s
+2025-01-05 03:27:09 xbzrle: send updates to 4178434 pages in 15.7 GiB encoded memory, cache-miss 32.14%, overflow 4105407
+2025-01-05 03:27:09 average migration speed: 231.0 MiB/s - downtime 455 ms
+2025-01-05 03:27:09 migration status: completed
+2025-01-05 03:27:13 migration finished successfully (duration 00:01:19)
+TASK OK
