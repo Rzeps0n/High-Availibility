@@ -7,17 +7,17 @@ no ipv6 forwarding
 service integrated-vtysh-config
 !
 interface lo
- ip address {{ lo_ip }}
+ ip address {{ lo_ip }}/32
  ip router openfabric 1
  openfabric passive
 !
-interface {{ interface1 }}
+interface {{ interface1 }}/32
  ip router openfabric 1
  openfabric csnp-interval 2
  openfabric hello-interval 1
  openfabric hello-multiplier 2
 !
-interface {{ interface2 }}
+interface {{ interface2 }}/32
  ip router openfabric 1
  openfabric csnp-interval 2
  openfabric hello-interval 1

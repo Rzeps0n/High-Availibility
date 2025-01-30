@@ -1,8 +1,7 @@
 ---
-- name: Update and upgrade all packages, install and configure doas
+- name: Update and upgrade all packages
   hosts: all
   become: true
-  become_method: doas
   tasks:
     - name: Update apt package list
       apt:
@@ -15,4 +14,3 @@
     - name: Run apt-get autoremove
       apt:
         autoremove: true
-
