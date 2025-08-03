@@ -1,6 +1,6 @@
 ---
 - import_playbook: upgrade.yaml
 - import_playbook: install_packages.yaml
-- import_playbook: openfabric.yaml
+- import_playbook: frr.yaml
 - import_playbook: netplan.yaml
 - import_playbook: hosts.yaml
