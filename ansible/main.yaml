@@ -1,7 +1,15 @@
 ---
-- import_playbook: upgrade.yaml
-- import_playbook: install_packages.yaml
-- import_playbook: hosts.yaml
-- import_playbook: frr.yaml
-- import_playbook: netplan.yaml
-- import_playbook: hosts.yaml
+- name: Base system maintenance
+  hosts: all
+  become: true
+  roles:
+    - role: upgrade
+    - role: packages
+    - role: hosts
+
+- name: Network routing and netplan
+  hosts: dl380
+  become: true
+  roles:
+    - role: frr
+    - role: netplan
