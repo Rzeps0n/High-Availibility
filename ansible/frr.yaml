@@ -3,18 +3,6 @@
   hosts: dl380
   become: true
   tasks:
-    - name: Load FRR interface variables
-      include_vars:
-        file: "vars/frr_interfaces.yaml"
-        name: frr_interfaces
-
-    - name: Set FRR interface variables
-      set_fact:
-        lo_ip: "{{ frr_interfaces[inventory_hostname]['lo_ip'] }}"
-        interface1: "{{ frr_interfaces[inventory_hostname]['interface1'] }}"
-        interface2: "{{ frr_interfaces[inventory_hostname]['interface2'] }}"
-        net: "{{ frr_interfaces[inventory_hostname]['net'] }}"
-
     - name: Enable the OpenFabric daemon
       lineinfile:
         path: /etc/frr/daemons

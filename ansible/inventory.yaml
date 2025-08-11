@@ -1,6 +1,5 @@
 ---
 all:
-  hosts:
   children:
     dl380:
       hosts:
@@ -8,11 +7,25 @@ all:
           ansible_host: dl380-1.internal
           ansible_user: nebula
           ansible_ssh_private_key_file: ~/.ssh/dl380
+          lo_ip: "192.168.14.11"
+          frr_interface_1: "eno49np0"
+          frr_interface_2: "eno50np1"
+          net: "49.0001.1111.1111.1111.00"
+
         dl380-2:
           ansible_host: dl380-2.internal
           ansible_user: nebula
           ansible_ssh_private_key_file: ~/.ssh/dl380
+          lo_ip: "192.168.14.12"
+          frr_interface_1: "eno49np0"
+          frr_interface_2: "eno50np1"
+          net: "49.0001.2222.2222.2222.00"
+
         dl380-3:
           ansible_host: dl380-3.internal
           ansible_user: nebula
           ansible_ssh_private_key_file: ~/.ssh/dl380
+          lo_ip: "192.168.14.13"
+          frr_interface_1: "eno49np0"
+          frr_interface_2: "eno50np1"
+          net: "49.0001.3333.3333.3333.00"

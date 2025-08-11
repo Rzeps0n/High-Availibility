@@ -1,7 +1,9 @@
 127.0.0.1       localhost
 
-{% for host_name, vals in frr_interfaces.items() %}
-{{ vals.lo_ip }}    {{ host_name }}
+{% for host in groups['dl380'] %}
+{% if hostvars[host].lo_ip is defined %}
+{{ hostvars[host].lo_ip }}  {{ host }}
+{% endif %}
 {% endfor %}
 
 # The following lines are desirable for IPv6 capable hosts
