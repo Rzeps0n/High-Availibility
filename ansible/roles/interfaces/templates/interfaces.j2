@@ -13,9 +13,11 @@ iface eno3 inet manual
 auto eno4
 iface eno4 inet manual
 
+auto {{ frr_interface_1 }}
 iface {{ frr_interface_1 }} inet manual
         mtu 9000
 
+auto {{ frr_interface_2 }}
 iface {{ frr_interface_2 }} inet manual
         mtu 9000
 
@@ -32,7 +34,5 @@ iface vmbr0 inet static
         bridge-ports bond0
         bridge-stp off
         bridge-fd 0
-        metric 500
 
 source /etc/network/interfaces.d/*
-post-up systemctl reload frr

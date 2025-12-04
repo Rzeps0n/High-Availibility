@@ -1,11 +1,6 @@
 ---
 - name: Apply roles
   hosts: all
-  pre_tasks:
-    - name: Get kernel version
-      ansible.builtin.command: uname -r
-      register: kernel_version
-      changed_when: false
   roles:
     - upgrade
     - packages
