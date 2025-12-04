@@ -1,0 +1,44 @@
+---
+- name: Add a proxmox user
+    ansile.builtin.command:
+        cmd: |
+          pveum user add terraform@pve -comment "Terraform User"
+
+- name: Add a Custom Role for Tofu with Required Permissions
+    ansible.builtin.command:
+      cmd: >
+        pveum role add TerraformRole -privs
+        "Datastore.Allocate
+        Datastore.AllocateSpace
+        Datastore.AllocateTemplate
+        Datastore.Audit
+        Pool.Allocate
+        Pool.Audit
+        Sys.Audit
+        Sys.Console
+        Sys.Modify
+        SDN.Use
+        VM.Allocate
+        VM.Audit
+        VM.Clone
+        VM.Config.CDROM
+        VM.Config.Cloudinit
+        VM.Config.CPU
+        VM.Config.Disk
+        VM.Config.HWType
+        VM.Config.Memory
+        VM.Config.Network
+        VM.Config.Options
+        VM.Migrate
+        VM.Monitor
+        VM.PowerMgmt
+        User.Modify
+        Mapping.Use"
+
+- name: Assign the Role to the User at the Datacenter Level
+    ansible.builtin.command:
+      cmd: pveum acl modify / -user terraform@pve -role TerraformRole
+
+- name: pveum user token add terraform@pve provider --privsep=0
+    ansible.builtin.command:
+      cmd: pveum user token add terraform@pve provider --privsep=0
