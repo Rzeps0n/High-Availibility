@@ -1,15 +1,16 @@
 ---
-- name: Base system maintenance
+- name: Apply roles
   hosts: all
-  become: true
+  pre_tasks:
+    - name: Get kernel version
+      ansible.builtin.command: uname -r
+      register: kernel_version
+      changed_when: false
   roles:
-    - role: upgrade
-    - role: packages
-    - role: hosts
-
-- name: Network routing and netplan
-  hosts: dl380
-  become: true
-  roles:
-    - role: frr
-    - role: netplan
+    - upgrade
+    - packages
+    - hosts
+    - frr
+    - { role: interfaces, when: "'pve' in ansible_kernel" }
+    - { role: netplan, when: ansible_distribution == "Rocky" }
+    - geerlingguy.ntp

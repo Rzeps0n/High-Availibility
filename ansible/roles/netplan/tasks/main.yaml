@@ -3,32 +3,27 @@
   ansible.builtin.file:
     path: /etc/networkd-dispatcher/routable.d
     state: directory
+    mode: '0600'
 
 - name: Add command to 50-ifup-hooks
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/networkd-dispatcher/routable.d/50-ifup-hooks
     line: '/usr/bin/systemctl restart frr'
     state: present
     create: true
+    mode: '0600'
 
 - name: Create netplan configuration file
-  template:
+  ansible.builtin.template:
     src: 50-cloud-init.yaml
     dest: /etc/netplan/50-cloud-init.yaml
     owner: root
     group: root
     mode: '0600'
+    backup: true
 
 - name: Apply netplan configuration
-  command: netplan apply
+  ansible.builtin.command: netplan apply
   register: netplan_apply
   changed_when: netplan_apply.rc == 0
   notify: Restart networking
-
-- name: Debug current netplan configuration
-  command: netplan get
-  register: current_netplan_config
-
-- name: Show current netplan configuration
-  debug:
-    var: current_netplan_config.stdout

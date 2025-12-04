@@ -1,5 +1,5 @@
 ---
-- name: Restart frr
+- name: Restart networking
   ansible.builtin.service:
-    name: frr
+    name: networking
     state: restarted

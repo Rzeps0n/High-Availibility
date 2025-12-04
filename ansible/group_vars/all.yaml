@@ -1,0 +1,8 @@
+ntp_timezone: Europe/Warsaw
+frr_interface_1: "eno49np0"
+frr_interface_2: "eno50np1"
+gateway_ip: 192.168.14.1
+netmask_cidr: 24
+packages:
+  - iperf3
+  - vim

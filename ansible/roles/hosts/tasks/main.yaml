@@ -1,5 +1,7 @@
 ---
 - name: Overwrite /etc/hosts with lo_ip entries
-  template:
+  ansible.builtin.template:
     src: hosts.j2
     dest: /etc/hosts
+    mode: '0600'
+    backup: true

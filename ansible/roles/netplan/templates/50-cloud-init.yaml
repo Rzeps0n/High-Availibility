@@ -19,8 +19,8 @@ network:
         eno2: {}
         eno3: {}
         eno4: {}
-        eno49np0:
+        {{ frr_interface_1 }}:
             mtu: 9000
-        eno50np1:
+        {{ frr_interface_1 }}:
             mtu: 9000
     version: 2

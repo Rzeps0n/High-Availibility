@@ -1,12 +1,5 @@
 ---
-- name: Update apt package list
-  apt:
+- name: Update cache and upgrade packages
+  ansible.builtin.package:
     update_cache: true
-
-- name: Upgrade all apt packages
-  apt:
-    upgrade: safe
-
-- name: Run apt-get autoremove
-  apt:
-    autoremove: true
+    upgrade: true
