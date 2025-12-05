@@ -1,7 +1,7 @@
 ---
 all:
   children:
-    dl380:
+    nodes:
       hosts:
         dl380-1:
           ansible_user: root
@@ -20,3 +20,7 @@ all:
           ansible_host: dl380-3.internal
           lo_ip: "192.168.14.13"
           net: "49.0001.3333.3333.3333.00"
+
+    master:
+      hosts:
+        dl380-1:

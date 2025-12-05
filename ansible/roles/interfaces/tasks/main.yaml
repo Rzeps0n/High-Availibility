@@ -22,4 +22,5 @@
 - name: Reload pve networking
   ansible.builtin.command:
     cmd: pvesh set /nodes/{{ ansible_hostname }}/network
+    removes: /etc/network/interfaces.new
   when: interfaces_new.stat.checksum != interfaces_current.stat.checksum

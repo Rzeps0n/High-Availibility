@@ -9,3 +9,4 @@
     - { role: interfaces, when: "'pve' in ansible_kernel" }
     - { role: netplan, when: ansible_distribution == "Rocky" }
     - geerlingguy.ntp
+    - { role: pve_tf, when: "'pve' in ansible_kernel and inventory_hostname in groups['master']"}
