@@ -6,3 +6,5 @@ netmask_cidr: 24
 packages:
   - iperf3
   - vim
+pve_version: 9
+linstor_place_count: 3
