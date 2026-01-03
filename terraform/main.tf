@@ -1,7 +1,6 @@
-# Variables (same as above)
-variable "vm_count_per_node" {
+variable "vm_count" {
   type    = number
-  default = 1
+  default = 9
 }
 
 variable "nodes" {
@@ -18,14 +17,14 @@ data "local_file" "ssh_public_key" {
   filename = pathexpand("~/.ssh/id_ed25519.pub")
 }
 
-# Create a map of all VMs to create
 locals {
-  vms_to_create = { for idx in range(0, var.vm_count_per_node * length(var.nodes)) :
+  vms_to_create = {
+    for idx in range(var.vm_count) :
     idx => {
-      node_idx       = floor(idx / var.vm_count_per_node)
-      node           = var.nodes[floor(idx / var.vm_count_per_node)]
       vm_num         = idx + 1
-      vm_idx_on_node = idx % var.vm_count_per_node
+      node_idx       = idx % length(var.nodes)
+      node           = var.nodes[idx % length(var.nodes)]
+      vm_idx_on_node = floor(idx / length(var.nodes))
     }
   }
 }
@@ -43,11 +42,11 @@ resource "proxmox_virtual_environment_download_file" "talos_nocloud_image" {
   node_name    = each.key
   file_name    = "talos-${local.talos.version}-nocloud-amd64.qcow2"
   url          = "https://factory.talos.dev/image/ce4c980550dd2ab1b17bbf2b08801c7eb59418eafe8f279833297925d67c7515/${local.talos.version}/metal-amd64-secureboot.qcow2"
-#  url          = "https://factory.talos.dev/image/583560d413df7502f15f3c274c36fc23ce1af48cef89e98b1e563fb49127606e/${local.talos.version}/nocloud-amd64.qcow2"
+  #  url          = "https://factory.talos.dev/image/583560d413df7502f15f3c274c36fc23ce1af48cef89e98b1e563fb49127606e/${local.talos.version}/nocloud-amd64.qcow2"
 }
 
 # Create VMs using for_each
-resource "proxmox_virtual_environment_vm" "talos_vm" {
+resource "proxmox_virtual_environment_vm" "k8s_vm" {
   for_each = local.vms_to_create
 
   name      = "${var.base_vm_name}-${each.value.vm_num}"
@@ -109,7 +108,7 @@ resource "proxmox_virtual_environment_vm" "talos_vm" {
     datastore_id = "linstor_storage"
     file_id      = proxmox_virtual_environment_download_file.talos_nocloud_image[each.value.node].id
     interface    = "virtio0"
-    file_format  = "qcow2"
+    file_format  = "raw"
     iothread     = true
     discard      = "on"
     size         = 16
@@ -117,5 +116,24 @@ resource "proxmox_virtual_environment_vm" "talos_vm" {
 
   network_device {
     bridge = "vmbr0"
+  }
+
+  lifecycle {
+    ignore_changes = [
+      #      initialization[0].datastore_id,
+      #      initialization[0].interface,
+      #      network_device[0].disconnected,
+      #      network_device[0].mac_address,
+      disk[0].file_format,
+      #      disk[0].file_id,
+      #      disk[0].path_in_datastore,
+      #      tags,
+      #      mac_addresses,
+      id,
+      vm_id,
+      #      cpu[0].flags,
+      ipv4_addresses,
+      ipv6_addresses
+    ]
   }
 }
