@@ -6,6 +6,7 @@ output "created_vms" {
       ipv4 = one([
         for ip in flatten(vm.ipv4_addresses) : ip
         if(
+          # rfc1918
           startswith(ip, "10.") ||
           startswith(ip, "192.168.") ||
           (
