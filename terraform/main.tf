@@ -11,7 +11,7 @@ variable "nodes" {
 
 variable "base_vm_name" {
   type    = string
-  default = "terraform-pve-test"
+  default = "terraform-talos"
 }
 
 data "local_file" "ssh_public_key" {
@@ -30,19 +30,24 @@ locals {
   }
 }
 
-# Download Ubuntu cloud image on each node
-resource "proxmox_virtual_environment_download_file" "ubuntu_cloud_image" {
-  for_each = toset(var.nodes)
+locals {
+  talos = {
+    version = "v1.12.0"
+  }
+}
 
+resource "proxmox_virtual_environment_download_file" "talos_nocloud_image" {
+  for_each     = toset(var.nodes)
   content_type = "import"
   datastore_id = "local"
   node_name    = each.key
-  url          = "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img"
-  file_name    = "jammy-server-cloudimg-amd64.qcow2"
+  file_name    = "talos-${local.talos.version}-nocloud-amd64.qcow2"
+  url          = "https://factory.talos.dev/image/ce4c980550dd2ab1b17bbf2b08801c7eb59418eafe8f279833297925d67c7515/${local.talos.version}/metal-amd64-secureboot.qcow2"
+#  url          = "https://factory.talos.dev/image/583560d413df7502f15f3c274c36fc23ce1af48cef89e98b1e563fb49127606e/${local.talos.version}/nocloud-amd64.qcow2"
 }
 
 # Create VMs using for_each
-resource "proxmox_virtual_environment_vm" "ubuntu_vm" {
+resource "proxmox_virtual_environment_vm" "talos_vm" {
   for_each = local.vms_to_create
 
   name      = "${var.base_vm_name}-${each.value.vm_num}"
@@ -52,15 +57,30 @@ resource "proxmox_virtual_environment_vm" "ubuntu_vm" {
 
   agent {
     enabled = true
+    trim    = true
+    timeout = "5m"
   }
 
   cpu {
     cores = 2
+    type  = "host"
+    numa  = true
   }
 
   memory {
     dedicated = 2048
   }
+
+  efi_disk {
+    datastore_id      = "linstor_storage"
+    file_format       = "raw"
+    type              = "4m"
+    pre_enrolled_keys = false
+  }
+
+  bios    = "ovmf"
+  machine = "q35"
+
 
   initialization {
     datastore_id = "linstor_storage"
@@ -69,22 +89,30 @@ resource "proxmox_virtual_environment_vm" "ubuntu_vm" {
       ipv4 {
         address = "dhcp"
       }
+      ipv6 {
+        address = "dhcp"
+      }
     }
 
     user_account {
-      username = "ubuntu"
-      password = "ubuntu"
+      username = "talos"
+      password = "talos"
       keys     = [trimspace(data.local_file.ssh_public_key.content)]
     }
   }
 
+  operating_system {
+    type = "l26"
+  }
+
   disk {
     datastore_id = "linstor_storage"
-    import_from  = proxmox_virtual_environment_download_file.ubuntu_cloud_image[each.value.node].id
+    file_id      = proxmox_virtual_environment_download_file.talos_nocloud_image[each.value.node].id
     interface    = "virtio0"
+    file_format  = "qcow2"
     iothread     = true
     discard      = "on"
-    size         = 8
+    size         = 16
   }
 
   network_device {
