@@ -101,3 +101,11 @@ resource "proxmox_virtual_environment_vm" "k8s_vm" {
     ]
   }
 }
+
+resource "proxmox_virtual_environment_haresource" "k8s_vm_ha" {
+  for_each    = proxmox_virtual_environment_vm.k8s_vm
+  resource_id = "vm:${each.value.vm_id}"
+  state       = "started"
+  comment     = "Managed by Terraform"
+}
+
