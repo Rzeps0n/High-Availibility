@@ -3,17 +3,23 @@ resource "proxmox_virtual_environment_download_file" "talos_iso" {
   content_type = "iso"
   datastore_id = "local"
   node_name    = each.key
-  file_name    = "talos-${local.talos.version}-metal-amd64-secureboot.iso"
-  url          = "https://factory.talos.dev/image/${local.talos.schematic_id}/${local.talos.version}/metal-amd64-secureboot.iso"
+  file_name    = "talos-${local.talos.version}-${local.talos.schematic_id}-metal-amd64.iso"
+  url          = "https://factory.talos.dev/image/${local.talos.schematic_id}/${local.talos.version}/metal-amd64.iso"
 }
 
 resource "proxmox_virtual_environment_vm" "k8s_vm" {
   for_each = local.vms_to_create
 
-  name      = "${local.k8s_vm.name_prefix}-${each.value.vm_num}"
-  node_name = each.value.node
+  name        = "${local.k8s_vm.name_prefix}-${each.value.vm_num}"
+  description = "Managed by Terraform"
+  tags        = ["terraform"]
+  node_name   = each.value.node
 
   stop_on_destroy = true
+
+  bios       = "ovmf"
+  machine    = "q35"
+  boot_order = ["scsi0", "sata0"]
 
   agent {
     enabled = true
@@ -31,16 +37,15 @@ resource "proxmox_virtual_environment_vm" "k8s_vm" {
     dedicated = local.k8s_vm.memory_size
   }
 
-  efi_disk {
-    datastore_id      = local.k8s_vm.datastore_id
-    file_format       = "raw"
-    type              = "4m"
-    pre_enrolled_keys = false
-  }
-
-  bios    = "ovmf"
-  machine = "q35"
-
+  #  efi_disk {
+  #    datastore_id      = local.k8s_vm.datastore_id
+  #    file_format       = "raw"
+  #    pre_enrolled_keys = false
+  #  }
+  #
+  #  tpm_state {
+  #    datastore_id = local.k8s_vm.datastore_id
+  #  }
 
   #  initialization {
   #    datastore_id = local.k8s_vm.datastore_id
@@ -67,7 +72,7 @@ resource "proxmox_virtual_environment_vm" "k8s_vm" {
 
   disk {
     datastore_id = local.k8s_vm.datastore_id
-    interface    = "virtio0"
+    interface    = "scsi0"
     file_format  = "raw"
     iothread     = true
     discard      = "on"
@@ -75,7 +80,8 @@ resource "proxmox_virtual_environment_vm" "k8s_vm" {
   }
 
   cdrom {
-    file_id = proxmox_virtual_environment_download_file.talos_iso[each.value.node].id
+    file_id   = proxmox_virtual_environment_download_file.talos_iso[each.value.node].id
+    interface = "sata0"
   }
 
   network_device {
