@@ -47,24 +47,28 @@ resource "proxmox_virtual_environment_vm" "k8s_vm" {
   #    datastore_id = local.k8s_vm.datastore_id
   #  }
 
-  #  initialization {
-  #    datastore_id = local.k8s_vm.datastore_id
-  #
-  #    ip_config {
-  #      ipv4 {
-  #        address = "dhcp"
-  #      }
-  #      ipv6 {
-  #        address = "dhcp"
-  #      }
-  #    }
-  #
-  #    user_account {
-  #      username = "talos"
-  #      password = "talos"
-  #      keys     = [trimspace(data.local_file.ssh_public_key.content)]
-  #    }
-  #  }
+  initialization {
+    datastore_id = local.k8s_vm.datastore_id
+    interface    = "scsi1"
+    file_format  = "raw"
+    dns {
+      domain = "internal"
+    }
+
+    ip_config {
+      ipv4 {
+        address = "dhcp"
+      }
+      ipv6 {
+        address = "dhcp"
+      }
+    }
+
+    user_account {
+      username = "talos"
+      keys     = [trimspace(data.local_file.ssh_public_key.content)]
+    }
+  }
 
   operating_system {
     type = "l26"
