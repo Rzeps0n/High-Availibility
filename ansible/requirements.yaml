@@ -1,3 +1,5 @@
 ---
 roles:
   - name: geerlingguy.ntp
+collections:
+  - name: community.proxmox

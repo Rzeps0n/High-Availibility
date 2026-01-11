@@ -52,7 +52,7 @@ resource "proxmox_virtual_environment_vm" "k8s_vm" {
     interface    = "scsi1"
     file_format  = "raw"
     dns {
-      domain = "internal"
+      domain = "local.k8s_vm.search_domain"
     }
 
     ip_config {
@@ -78,7 +78,7 @@ resource "proxmox_virtual_environment_vm" "k8s_vm" {
     datastore_id = local.k8s_vm.datastore_id
     interface    = "scsi0"
     file_format  = "raw"
-    iothread     = true
+    #    iothread     = true
     discard      = "on"
     size         = local.k8s_vm.disk_size
   }
@@ -98,7 +98,7 @@ resource "proxmox_virtual_environment_vm" "k8s_vm" {
       #      initialization[0].interface,
       #      network_device[0].disconnected,
       #      network_device[0].mac_address,
-      #      disk[0].file_format,
+      disk[0].file_format,
       #      disk[0].file_id,
       #      disk[0].path_in_datastore,
       #      tags,
@@ -112,10 +112,10 @@ resource "proxmox_virtual_environment_vm" "k8s_vm" {
   }
 }
 
-resource "proxmox_virtual_environment_haresource" "k8s_vm_ha" {
-  for_each    = proxmox_virtual_environment_vm.k8s_vm
-  resource_id = "vm:${each.value.vm_id}"
-  state       = "started"
-  comment     = "Managed by Terraform"
-}
+#resource "proxmox_virtual_environment_haresource" "k8s_vm_ha" {
+#  for_each    = proxmox_virtual_environment_vm.k8s_vm
+#  resource_id = "vm:${each.value.vm_id}"
+#  state       = "started"
+#  comment     = "Managed by Terraform"
+#}
 
