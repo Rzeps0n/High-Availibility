@@ -1,3 +1,6 @@
 .terraform*
 *state*
 variables.tf
+controlplane.yaml
+worker.yaml
+talosconfig
