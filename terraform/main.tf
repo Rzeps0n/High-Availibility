@@ -79,8 +79,8 @@ resource "proxmox_virtual_environment_vm" "k8s_vm" {
     interface    = "scsi0"
     file_format  = "raw"
     #    iothread     = true
-    discard      = "on"
-    size         = local.k8s_vm.disk_size
+    discard = "on"
+    size    = local.k8s_vm.disk_size
   }
 
   cdrom {

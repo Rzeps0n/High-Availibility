@@ -1,0 +1,165 @@
+---
+- name: Download Linbit keyring
+  ansible.builtin.get_url:
+    url: "https://packages.linbit.com/public/linbit-keyring.deb"
+    dest: /tmp/linbit-keyring.deb
+    mode: 644
+
+- name: Install Linbit keyring
+  ansible.builtin.apt:
+    deb: /tmp/linbit-keyring.deb
+
+- name: Add Linbit repository for Proxmox
+  ansible.builtin.copy:
+    dest: /etc/apt/sources.list.d/linbit.list
+    content: |
+      deb [signed-by=/etc/apt/trusted.gpg.d/linbit-keyring.gpg] http://packages.linbit.com/public/ proxmox-{{ pve_version }} drbd-9
+    mode: '0644'
+
+- name: Install required packages
+  ansible.builtin.apt:
+    name:
+      - proxmox-default-headers
+      - drbd-dkms
+      - drbd-utils
+      - linstor-controller
+      - linstor-satellite
+      - linstor-client
+      - linstor-proxmox
+    state: present
+    update_cache: true
+
+- name: Load DRBD module
+  ansible.builtin.command: modprobe drbd
+  changed_when: false
+
+- name: Start LINSTOR services
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    enabled: true
+    state: started
+  with_items:
+    - linstor-satellite
+
+- name: Start LINSTOR controller on master only
+  ansible.builtin.systemd:
+    name: linstor-controller
+    enabled: true
+    state: started
+  when: inventory_hostname in groups['master']
+
+
+- name: Check if LINSTOR storage already exists
+  ansible.builtin.command: |
+    pvesh get /storage/linstor_storage
+  register: pve_linstor_storage_check_if_exists
+  failed_when: false
+  changed_when: false
+  when: inventory_hostname in groups['master']
+  run_once: true
+
+- name: Setup linstor
+  when:
+    - inventory_hostname in groups['master']
+    - pve_linstor_storage_check_if_exists.rc != 0
+  block:
+    - name: Check if linstor nodes already exist
+      ansible.builtin.command:
+        cmd: |
+          linstor node list
+      register: pve_linstor_nodes_check
+      changed_when: false
+      when:
+        - inventory_hostname in groups['master']
+      delegate_to: "{{ inventory_hostname }}"
+
+    - name: Create LINSTOR nodes (master only)
+      changed_when: true
+      ansible.builtin.command:
+        cmd: |
+          linstor node create {{ item }} {{ hostvars[item].lo_ip }}
+      with_items: "{{ groups['nodes'] }}"
+      when:
+        - inventory_hostname in groups['master']
+        - hostvars[item].lo_ip is defined
+        - pve_linstor_nodes_check.stdout is not search(hostvars[item].lo_ip)
+      delegate_to: "{{ inventory_hostname }}"
+
+    - name: Check if linstor storage_pools already exist
+      ansible.builtin.command:
+        cmd: |
+          linstor storage-pool list
+      register: pve_linstor_pools_check
+      changed_when: false
+      when:
+        - inventory_hostname in groups['master']
+      delegate_to: "{{ inventory_hostname }}"
+
+    - name: Create storage pools
+      changed_when: true
+      ansible.builtin.command:
+        cmd: |
+          linstor storage-pool create lvmthin {{ item }} linstor pve/data
+      with_items: "{{ groups['nodes'] }}"
+      when:
+        - inventory_hostname in groups['master']
+        - hostvars[item].lo_ip is defined
+        - pve_linstor_pools_check.stdout is not search(item + '.*linstor')
+      delegate_to: "{{ inventory_hostname }}"
+
+    - name: Check if linstor resource-group already exists
+      ansible.builtin.command:
+        cmd: |
+          linstor resource-group list
+      register: pve_linstor_rg_check
+      changed_when: false
+      when:
+        - inventory_hostname in groups['master']
+      delegate_to: "{{ inventory_hostname }}"
+
+    - name: Create resource group (master only)
+      changed_when: true
+      ansible.builtin.command: |
+        linstor resource-group create pve_rg --storage-pool=linstor --place-count={{ pve_linstor_place_count }}
+      when:
+        - inventory_hostname in groups['master']
+        - "'StoragePool(s): linstor' not in pve_linstor_rg_check.stdout"
+
+    - name: Check if linstor volume-group already exists
+      ansible.builtin.command:
+        cmd: |
+          linstor volume-group list pve-rg
+      register: pve_linstor_vg_check
+      changed_when: false
+      when:
+        - inventory_hostname in groups['master']
+      delegate_to: "{{ inventory_hostname }}"
+
+    - name: Create volume group (master only)
+      changed_when: true
+      ansible.builtin.command: |
+        linstor volume-group create pve-rg
+      when:
+        - inventory_hostname in groups['master']
+        - pve_linstor_vg_check.rc != 0
+
+    - name: Create LINSTOR storage in Proxmox via API
+      changed_when: true
+      ansible.builtin.command: >
+        pvesh create /storage
+        -storage linstor_storage
+        -type drbd
+        -content images,rootdir
+        -controller {{ hostvars[groups['master'][0]].lo_ip }}
+        -resourcegroup pve-rg
+
+    - name: Restart Proxmox services
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        state: restarted
+      with_items:
+        - pve-cluster
+        - pvedaemon
+        - pvestatd
+        - pveproxy
+        - pve-ha-lrm

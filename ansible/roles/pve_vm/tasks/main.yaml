@@ -1,0 +1,55 @@
+---
+- name: Build detailed VM list
+  ansible.builtin.set_fact:
+    pve_vm_list: "{{ pve_vm_list | default([]) + [ {
+      'vm_num': item,
+      'name': k8s_vm.name_prefix ~ '-' ~ (item + 1),
+      'node': groups['nodes'][item % (groups['nodes'] | length)],
+      'node_idx': item % (groups['nodes'] | length),
+      'vm_idx_on_node': (item // (groups['nodes'] | length))
+    } ] }}"
+  loop: "{{ range(0, k8s_vm.count) | list }}"
+  delegate_to: localhost
+
+- name: Download Talos ISO to Proxmox nodes
+  ansible.builtin.uri:
+    url: "{{ talos.iso_url }}"
+    dest: "{{ talos.iso_dir }}/{{ talos.iso_name }}"
+    mode: "0644"
+    creates: "{{ talos.iso_dir }}/{{ talos.iso_name }}"
+  delegate_to: "{{ inventory_hostname }}"
+  when: inventory_hostname in groups['nodes']
+
+- name: Create Talos Kubernetes VMs (QEMU via pvesh)
+  ansible.builtin.shell: >
+    pvesh create /nodes/{{ item.node }}/qemu
+    -vmid {{ 9000 + item.vm_num }}
+    -name {{ item.name }}
+    -description "{{ k8s_vm.description }}"
+    -tags {{ k8s_vm.tags | join(',') }}
+    -memory {{ k8s_vm.memory_size }}
+    -cores {{ k8s_vm.core_count }}
+    -cpu host
+    -numa 1
+    -agent 1
+    -bios ovmf
+    -machine q35
+    -onboot 1
+    -net0 virtio,bridge={{ k8s_vm.network_bridge_id }}
+    -scsi0 {{ k8s_vm.datastore_id }}:{{ k8s_vm.disk_size }},format=raw,discard=on
+    -scsi1 {{ k8s_vm.datastore_id }}:cloudinit,format=raw
+    -sata0 local:iso/{{ talos.iso_name }},media=cdrom
+    -boot order=scsi0\;sata0
+    -ciuser talos
+    -ipconfig0 ip=dhcp,ip6=dhcp
+    -searchdomain internal
+  args:
+    creates: "/etc/pve/qemu-server/{{ 9000 + item.vm_num }}.conf"
+  loop: "{{ pve_vm_list }}"
+  when: inventory_hostname == item.node
+
+- name: Start Talos VMs # noqa: no-changed-when
+  ansible.builtin.shell: |
+    pvesh create /nodes/{{ item.node }}/qemu/{{ 9000 + item.vm_num }}/status/start
+  loop: "{{ pve_vm_list }}"
+  when: inventory_hostname == item.node

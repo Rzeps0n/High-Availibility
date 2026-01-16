@@ -1,19 +1,32 @@
 ---
 - name: Check if terraform user API token exists
-  ansible.builtin.command:
-    cmd: pveum user token list "terraform@pve" --noheader
+  ansible.builtin.command: |
+    pveum user token list "terraform@pve" --noheader
   register: pve_tf_api_check
   changed_when: false
   ignore_errors: true
 
 - name: Setup Terraform on pve
-  when: "'full-tokenid' not in pve_tf_api_check.stdout"
+  when:
+    - "'full-tokenid' not in pve_tf_api_check.stdout"
+    - pve_tf_api_check.rc != 0
   block:
-    - name: Add a proxmox user  # noqa: no-changed-when
+    - name: Check if Terraform user already exists
+      ansible.builtin.command:
+        cmd: pveum user list
+      register: pve_tf_user_list
+      changed_when: false
+      failed_when: false
+      when: inventory_hostname in groups['master']
+
+    - name: Add a proxmox user for Terraform
+      changed_when: true
       ansible.builtin.command:
         cmd: |
           pveum user add terraform@pve -comment "Terraform User"
-      ignore_errors: true
+      when:
+        - inventory_hostname in groups['master']
+        - "'terraform@pve' not in pve_tf_user_list.stdout"
 
     - name: Add a Custom Role for Tofu with Required Permissions  # noqa: no-changed-when
       ansible.builtin.command:
@@ -46,8 +59,8 @@
           Mapping.Use"
 
     - name: Assign the Role to the User at the Datacenter Level # noqa: no-changed-when
-      ansible.builtin.command:
-        cmd: pveum acl modify / -user terraform@pve -role TerraformRole
+      ansible.builtin.command: |
+        pveum acl modify / -user terraform@pve -role TerraformRole
 
     - name: Create user token for terraform@pve # noqa: no-changed-when
       ansible.builtin.command:

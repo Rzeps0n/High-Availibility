@@ -1,0 +1,20 @@
+dir: local
+        path /var/lib/vz
+        content iso,import,vztmpl,backup
+        shared 1
+
+lvmthin: local-lvm
+        thinpool data
+        vgname pve
+        content rootdir,images
+
+rbd: ceph_pool
+        content rootdir,images
+        krbd 0
+        pool ceph_pool
+
+drbd: linstor_storage
+    content images,rootdir
+    controller {{ hostvars[groups['master'][0]].lo_ip }}
+    resourcegroup pve-rg
+
