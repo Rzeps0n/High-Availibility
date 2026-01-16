@@ -1,18 +1,26 @@
 ---
 all:
-  hosts:
   children:
-    dl380:
+    nodes:
       hosts:
         dl380-1:
+          ansible_user: root
           ansible_host: dl380-1.internal
-          ansible_user: root
-          ansible_ssh_private_key_file: ~/.ssh/dl380-ubuntu
+          lo_ip: "192.168.14.11"
+          net: "49.0001.1111.1111.1111.00"
+
         dl380-2:
+          ansible_user: root
           ansible_host: dl380-2.internal
-          ansible_user: root
-          ansible_ssh_private_key_file: ~/.ssh/dl380-ubuntu
+          lo_ip: "192.168.14.12"
+          net: "49.0001.2222.2222.2222.00"
+
         dl380-3:
-          ansible_host: dl380-3.internal
           ansible_user: root
-          ansible_ssh_private_key_file: ~/.ssh/dl380-ubuntu
+          ansible_host: dl380-3.internal
+          lo_ip: "192.168.14.13"
+          net: "49.0001.3333.3333.3333.00"
+
+    master:
+      hosts:
+        dl380-1:

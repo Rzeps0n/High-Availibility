@@ -1,0 +1,39 @@
+ntp_timezone: Europe/Warsaw
+frr_interface_1: "eno49np0"
+frr_interface_2: "eno50np1"
+gateway_ip: 192.168.14.1
+netmask_cidr: 24
+packages:
+  - iperf3
+  - vim
+pve_version: 9
+linstor_place_count: 3
+
+# Proxmox API
+api_host: "dl380-1.internal"
+api_user: "terraform@pve"
+api_token_id: "provider"
+api_token_secret: "a90e3a46-24ea-4584-85d7-4911d44113e1"
+
+# Talos
+talos:
+  version: "v1.12.1"
+  schematic_id: "bd0ba6cbf4343e0963deb7198401902252176980148c40c444153d84014ec339"
+  iso_name: "talos-{{ talos.version }}-{{ talos.schematic_id }}-metal-amd64.iso"
+  iso_url: "https://factory.talos.dev/image/{{ talos.schematic_id }}/{{ talos.version }}/metal-amd64.iso"
+  iso_dir: "/var/lib/vz/template/iso/"
+
+# K8s VM parameters
+k8s_vm:
+  count: 9
+  name_prefix: "ansible-talos"
+#  datastore_id: "linstor_storage"
+  datastore_id: "local-lvm"
+  network_bridge_id: "vmbr0"
+  core_count: 4
+  disk_size: 20         # GB
+  memory_size: 4096     # MB
+  tags:
+    - ansible
+  description: "Managed by Ansible"
+  search_domain: "internal"

@@ -1,0 +1,5 @@
+---
+- name: Update cache and upgrade packages
+  ansible.builtin.package:
+    update_cache: true
+    upgrade: true

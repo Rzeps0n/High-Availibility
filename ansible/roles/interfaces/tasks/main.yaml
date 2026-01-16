@@ -1,0 +1,26 @@
+---
+- name: Apply new interfaces config
+  ansible.builtin.template:
+    src: interfaces.j2
+    dest: /etc/network/interfaces.new
+    owner: root
+    group: root
+    mode: '0600'
+
+- name: Stat current interfaces file
+  ansible.builtin.stat:
+    path: /etc/network/interfaces
+    checksum_algorithm: sha1
+  register: interfaces_current
+
+- name: Stat staged interfaces.new file
+  ansible.builtin.stat:
+    path: /etc/network/interfaces.new
+    checksum_algorithm: sha1
+  register: interfaces_new
+
+- name: Reload pve networking
+  ansible.builtin.command:
+    cmd: pvesh set /nodes/{{ ansible_hostname }}/network
+    removes: /etc/network/interfaces.new
+  when: interfaces_new.stat.checksum != interfaces_current.stat.checksum

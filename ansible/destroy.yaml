@@ -1,0 +1,44 @@
+---
+- name: Delete all VMs created by ansible (full purge)
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: Get all QEMU VMs on this node (JSON)
+      ansible.builtin.command: >
+        pvesh get /nodes/{{ inventory_hostname }}/qemu --output-format json
+      register: qemu_vms_raw
+      changed_when: false
+
+    - name: Extract VMIDs tagged with "ansible" (no jq)
+      ansible.builtin.set_fact:
+        ansible_vms: >
+          {{
+          (qemu_vms_raw.stdout | from_json)
+          | selectattr('tags', 'defined')
+          | selectattr('tags', 'search', '(^|,)ansible(,|$)')
+          | map(attribute='vmid')
+          | list
+          }}
+
+    - name: Stop VMs (force)  # noqa: ignore-errors
+      changed_when: true
+      ansible.builtin.command: |
+        pvesh create /nodes/{{ inventory_hostname }}/qemu/{{ item }}/status/stop
+      loop: "{{ ansible_vms }}"
+      when: ansible_vms | length > 0
+      ignore_errors: true
+
+    - name: Delete VMs with full cleanup
+      changed_when: true
+      ansible.builtin.command: >
+        pvesh delete /nodes/{{ inventory_hostname }}/qemu/{{ item }} \
+        --purge 1 \
+        --destroy-unreferenced-disks 1
+      loop: "{{ ansible_vms }}"
+      when: ansible_vms | length > 0
+
+#    - name: Remove Talos ISO from Proxmox nodes
+#      ansible.builtin.file:
+#        path: "{{ talos.iso_dir }}/{{ talos.iso_name }}"
+#        state: absent

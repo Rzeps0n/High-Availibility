@@ -1,0 +1,22 @@
+---
+- name: Apply roles
+  hosts: all
+  roles:
+    - upgrade
+    - packages
+    - hosts
+    - frr
+    - { role: interfaces, when: "'pve' in ansible_kernel" }
+    - { role: netplan, when: ansible_distribution == "Rocky" }
+    - geerlingguy.ntp
+    - { role: pve_tf, when: "'pve' in ansible_kernel and inventory_hostname in groups['master']" }
+    - { role: pve_linstor, when: "'pve' in ansible_kernel" }
+#   - role: pve_vm
+#      when:
+#        - proxmox_api_host is defined
+#        - proxmox_api_user is defined
+#        - proxmox_api_token_id is defined
+#        - proxmox_api_token_secret is defined
+#        - talos is defined
+#        - k8s_vm is defined
+#        - ssh_public_key is defined

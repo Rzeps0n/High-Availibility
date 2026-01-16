@@ -1,0 +1,6 @@
+---
+- name: Install packages
+  ansible.builtin.package:
+    name: "{{ packages }}"
+    update_cache: true
+    state: present

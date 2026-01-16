@@ -1,0 +1,13 @@
+127.0.0.1 localhost.localdomain localhost
+{% for host in groups['all'] %}
+{% if hostvars[host].lo_ip is defined %}
+{{ hostvars[host].lo_ip }} {{ hostvars[host].ansible_host }} {{ ansible_hostname }}
+{% endif %}
+{% endfor %}
+
+::1     ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+ff02::3 ip6-allhosts
