@@ -3,24 +3,21 @@ all:
   children:
     nodes:
       hosts:
-        dl380-1:
+        big-chonker:
           ansible_user: root
-          ansible_host: dl380-1.internal
-          lo_ip: "192.168.14.11"
-          net: "49.0001.1111.1111.1111.00"
+          ansible_host: big-chonker.rapid.internal
+          lo_ip: 192.168.71.6
 
-        dl380-2:
+        lanberg:
           ansible_user: root
-          ansible_host: dl380-2.internal
-          lo_ip: "192.168.14.12"
-          net: "49.0001.2222.2222.2222.00"
+          ansible_host: lanberg.rapid.internal
+          lo_ip: 192.168.71.7
 
-        dl380-3:
-          ansible_user: root
-          ansible_host: dl380-3.internal
-          lo_ip: "192.168.14.13"
-          net: "49.0001.3333.3333.3333.00"
+#        cyborg:
+#          ansible_user: root
+#          ansible_host: cyborg.rapid.internal
+#          lo_ip: 192.168.71.8
 
     master:
       hosts:
-        dl380-1:
+        big-chonker:

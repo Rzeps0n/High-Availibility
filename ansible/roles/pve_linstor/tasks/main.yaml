@@ -51,8 +51,8 @@
 
 - name: Check if LINSTOR storage already exists
   ansible.builtin.command: |
-    pvesh get /storage/linstor_storage
-  register: pve_linstor_storage_check_if_exists
+    pvesh get /storage/linstor_storage_1
+  register: pve_linstor_storage_1_check_if_exists
   failed_when: false
   changed_when: false
   when: inventory_hostname in groups['master']
@@ -61,7 +61,7 @@
 - name: Setup linstor
   when:
     - inventory_hostname in groups['master']
-    - pve_linstor_storage_check_if_exists.rc != 0
+    - pve_linstor_storage_1_check_if_exists.rc != 0
   block:
     - name: Check if linstor nodes already exist
       ansible.builtin.command:
@@ -99,7 +99,7 @@
       changed_when: true
       ansible.builtin.command:
         cmd: |
-          linstor storage-pool create lvmthin {{ item }} linstor pve/data
+          linstor storage-pool create lvmthin {{ item }} linstor pve/data1
       with_items: "{{ groups['nodes'] }}"
       when:
         - inventory_hostname in groups['master']
@@ -128,7 +128,7 @@
     - name: Check if linstor volume-group already exists
       ansible.builtin.command:
         cmd: |
-          linstor volume-group list pve-rg
+          linstor volume-group list pve_rg
       register: pve_linstor_vg_check
       changed_when: false
       when:
@@ -138,7 +138,7 @@
     - name: Create volume group (master only)
       changed_when: true
       ansible.builtin.command: |
-        linstor volume-group create pve-rg
+        linstor volume-group create pve_rg
       when:
         - inventory_hostname in groups['master']
         - pve_linstor_vg_check.rc != 0
@@ -147,11 +147,11 @@
       changed_when: true
       ansible.builtin.command: >
         pvesh create /storage
-        -storage linstor_storage
+        -storage linstor_storage_1
         -type drbd
         -content images,rootdir
         -controller {{ hostvars[groups['master'][0]].lo_ip }}
-        -resourcegroup pve-rg
+        -resourcegroup pve_rg
 
     - name: Restart Proxmox services
       ansible.builtin.systemd:
