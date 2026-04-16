@@ -1,23 +1,45 @@
----
+#---
+#all:
+#  children:
+#    nodes:
+#      hosts:
+#        big-chonker:
+#          ansible_user: root
+#          ansible_host: big-chonker.rapid.internal
+#          lo_ip: 192.168.71.6
+#
+#        lanberg:
+#          ansible_user: root
+#          ansible_host: lanberg.rapid.internal
+#          lo_ip: 192.168.71.7
+#
+##        cyborg:
+##          ansible_user: root
+##          ansible_host: cyborg.rapid.internal
+##          lo_ip: 192.168.71.8
+#
+#    master:
+#      hosts:
+#        big-chonker:
 all:
   children:
     nodes:
       hosts:
-        big-chonker:
+        dl380-1:
           ansible_user: root
-          ansible_host: big-chonker.rapid.internal
-          lo_ip: 192.168.71.6
+          ansible_host: dl380-1.internal
+          lo_ip: 192.168.14.11
 
-        lanberg:
+        dl380-2:
           ansible_user: root
-          ansible_host: lanberg.rapid.internal
-          lo_ip: 192.168.71.7
+          ansible_host: dl380-2.internal
+          lo_ip: 192.168.14.12
 
-#        cyborg:
-#          ansible_user: root
-#          ansible_host: cyborg.rapid.internal
-#          lo_ip: 192.168.71.8
+        dl380-3:
+          ansible_user: root
+          ansible_host: dl380-3.internal
+          lo_ip: 192.168.14.13
 
     master:
       hosts:
-        big-chonker:
+        dl380-1:
