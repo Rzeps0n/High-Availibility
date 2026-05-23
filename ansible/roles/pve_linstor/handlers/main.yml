@@ -1,0 +1,15 @@
+
+---
+- name: HA | Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: HA | Restart drbd-reactor
+  ansible.builtin.systemd:
+    name: drbd-reactor
+    state: restarted
+
+- name: HA | Restart linstor-satellite
+  ansible.builtin.systemd:
+    name: linstor-satellite
+    state: restarted
