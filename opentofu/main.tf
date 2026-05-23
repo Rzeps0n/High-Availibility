@@ -37,15 +37,15 @@ resource "proxmox_virtual_environment_vm" "k8s_vm" {
     dedicated = local.k8s_vm.memory_size
   }
 
-  #  efi_disk {
-  #    datastore_id      = local.k8s_vm.datastore_id
-  #    file_format       = "raw"
-  #    pre_enrolled_keys = false
-  #  }
-  #
-  #  tpm_state {
-  #    datastore_id = local.k8s_vm.datastore_id
-  #  }
+#  efi_disk {
+#    datastore_id      = local.k8s_vm.datastore_id
+#    file_format       = "raw"
+#    pre_enrolled_keys = false
+#  }
+#
+#  tpm_state {
+#    datastore_id = local.k8s_vm.datastore_id
+#  }
 
   initialization {
     datastore_id = local.k8s_vm.datastore_id
@@ -94,16 +94,16 @@ resource "proxmox_virtual_environment_vm" "k8s_vm" {
 
   lifecycle {
     ignore_changes = [
-      #      initialization[0].datastore_id,
-      #      initialization[0].interface,
-      #      network_device[0].disconnected,
-      #      network_device[0].mac_address,
+#      initialization[0].datastore_id,
+#      initialization[0].interface,
+#      network_device[0].disconnected,
+#      network_device[0].mac_address,
       disk[0].file_format,
-      #      disk[0].file_id,
-      #      disk[0].path_in_datastore,
-      #      tags,
-      #      mac_addresses,
-      #      cpu[0].flags,
+#      disk[0].file_id,
+#      disk[0].path_in_datastore,
+#      tags,
+#      mac_addresses,
+#      cpu[0].flags,
       id,
       vm_id,
       ipv4_addresses,

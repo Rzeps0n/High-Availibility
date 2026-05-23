@@ -1,11 +1,13 @@
 ---
 - name: Ensure directory exists
+  become: true
   ansible.builtin.file:
     path: /etc/networkd-dispatcher/routable.d
     state: directory
     mode: '0600'
 
 - name: Add command to 50-ifup-hooks
+  become: true
   ansible.builtin.lineinfile:
     path: /etc/networkd-dispatcher/routable.d/50-ifup-hooks
     line: '/usr/bin/systemctl restart frr'
@@ -14,6 +16,7 @@
     mode: '0600'
 
 - name: Create netplan configuration file
+  become: true
   ansible.builtin.template:
     src: 50-cloud-init.yaml
     dest: /etc/netplan/50-cloud-init.yaml
@@ -23,6 +26,7 @@
     backup: true
 
 - name: Apply netplan configuration
+  become: true
   ansible.builtin.command: netplan apply
   register: netplan_apply
   changed_when: netplan_apply.rc == 0
