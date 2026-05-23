@@ -1,5 +1,6 @@
 ---
 - name: Install packages
+  become: true
   ansible.builtin.package:
     name: "{{ packages }}"
     update_cache: true

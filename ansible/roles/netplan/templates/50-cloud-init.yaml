@@ -21,6 +21,6 @@ network:
         eno4: {}
         {{ frr_interface_1 }}:
             mtu: 9000
-        {{ frr_interface_1 }}:
+        {{ frr_interface_2 }}:
             mtu: 9000
     version: 2

@@ -1,10 +1,12 @@
 ---
 - name: Ensure frr is installed
+  become: true
   ansible.builtin.package:
     name: frr
     state: present
 
 - name: Enable the OpenFabric daemon
+  become: true
   ansible.builtin.lineinfile:
     path: /etc/frr/daemons
     regexp: '^fabricd='
@@ -12,6 +14,7 @@
     state: present
 
 - name: Generate FRR configuration
+  become: true
   ansible.builtin.template:
     src: frr.conf.j2
     dest: /etc/frr/frr.conf
@@ -21,6 +24,7 @@
     - Restart frr
 
 - name: Ensure FRR service starts on boot
+  become: true
   ansible.builtin.service:
     name: frr
     enabled: true

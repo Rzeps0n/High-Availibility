@@ -1,0 +1,87 @@
+---
+- name: Purge LINSTOR from all nodes
+  hosts: nodes
+  become: true
+  tasks:
+
+    # ── Proxmox storage ──────────────────────────────────────
+    - name: Remove LINSTOR storage from Proxmox
+      ansible.builtin.command: pvesh delete /storage/linstor_storage
+      failed_when: false
+      changed_when: true
+      run_once: true
+
+    # ── Stop services ────────────────────────────────────────
+    - name: Stop and disable LINSTOR services
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        enabled: false
+        state: stopped
+      failed_when: false
+      loop:
+        - linstor-controller
+        - linstor-satellite
+
+    # ── Unload kernel module ─────────────────────────────────
+    - name: Unload DRBD kernel module
+      ansible.builtin.command: modprobe -r drbd drbd-reactor
+      failed_when: false
+      changed_when: false
+
+    # ── Purge packages ───────────────────────────────────────
+    - name: Purge LINSTOR and DRBD packages
+      ansible.builtin.apt:
+        name:
+          - drbd-dkms
+          - drbd-utils
+          - drbd-doc
+          - linstor-controller
+          - linstor-satellite
+          - linstor-client
+          - linstor-proxmox
+          - linstor-gui
+          - drbd-reactor
+        state: absent
+        purge: true
+        autoremove: true
+
+    # ── Remove repo and keyring ──────────────────────────────
+    - name: Remove Linbit apt repository
+      ansible.builtin.file:
+        path: /etc/apt/sources.list.d/linbit.list
+        state: absent
+
+    - name: Remove Linbit keyring
+      ansible.builtin.file:
+        path: /etc/apt/trusted.gpg.d/linbit-keyring.gpg
+        state: absent
+
+    - name: Remove keyring deb from tmp
+      ansible.builtin.file:
+        path: /tmp/linbit-keyring.deb
+        state: absent
+
+    # ── Remove leftover config and data dirs ─────────────────
+    - name: Remove LINSTOR data and config directories
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+        force: true
+      loop:
+        - /var/lib/linstor
+        - /etc/linstor
+        - /var/lib/linstor.orig
+        - /etc/systemd/system/var-lib-linstor.mount
+
+    - name: Remove DRBD module persistence file
+      ansible.builtin.file:
+        path: /etc/modules-load.d/drbd.conf
+        state: absent
+    
+    - name: HA | Reload systemd daemon on all nodes
+      ansible.builtin.systemd:
+        daemon_reload: true
+
+    - name: Update apt cache after cleanup
+      ansible.builtin.apt:
+        update_cache: true

@@ -1,0 +1,63 @@
+---
+- name: Setup initial dependencies
+  become: false
+  block:
+    - name: Check if dependencies are already installed
+      ansible.builtin.raw: >
+        ls /etc/doas.conf /usr/bin/doas /usr/bin/python3
+      register: dependency_check
+      ignore_errors: true
+      changed_when: false
+
+    - name: Remove CD apt sources
+      ansible.builtin.raw: >
+        echo "{{ ansible_become_pass }}" | su -c "
+        sed -i.bak '/^[[:space:]]*deb[[:space:]]\+cdrom:/d'
+        /etc/apt/sources.list &&
+        rm -f /etc/apt/sources.list.d/*cdrom*.list 2>/dev/null || true
+        "
+      when: dependency_check.rc != 0
+      changed_when: true
+
+    - name: Install doas & python3
+      ansible.builtin.raw: >
+        echo "{{ ansible_become_pass }}" | su -c "
+        apt update &&
+        apt install -y doas python3
+        "
+      when: dependency_check.rc != 0
+      changed_when: true
+
+    - name: Configure doas
+      ansible.builtin.raw: >
+        echo "{{ ansible_become_pass }}" | su -c "
+        echo 'permit nopass {{ ansible_user }}' > /etc/doas.conf &&
+        chmod 0400 /etc/doas.conf &&
+        if doas -C /etc/doas.conf;
+        then echo 'Doas config valid.' && exit 0;
+        else echo 'Error! Doas config invalid.' && exit 1 ;
+        fi
+        "
+      when: dependency_check.rc != 0
+      changed_when: true
+
+- name: Setup shell
+  become: false
+  become_method: community.general.doas
+  block:
+    - name: Ensure ~/.bash_logout is absent
+      ansible.builtin.file:
+        path: "{{ ansible_env.HOME }}/.bash_logout"
+        state: absent
+
+#    - name: Ensure .ssh directory exists
+#      ansible.builtin.file:
+#        path: "{{ ansible_env.HOME }}/.ssh"
+#        state: directory
+#        mode: '0700'
+#
+#    - name: Copy SSH public key to authorized_keys
+#      ansible.posix.authorized_key:
+#        user: "{{ ansible_user }}"
+#        state: present
+#        key: "{{ lookup('file', '~/.ssh/private.key.pub') }}"
