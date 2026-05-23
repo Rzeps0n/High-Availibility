@@ -6,15 +6,13 @@ netmask_cidr: 24
 packages:
   - iperf3
   - vim
+  - netplan.io
 pve_version: 9
 pve_linstor_place_count: 3
-#pve_linstor_place_count: 2
 lvmthin_vg_name: pve/data
-#lvmthin_vg_name: pve/data1
 linstor_rg_name: pve_rg
-#linstor_rg_name: pve_rg_1
 pve_linstor_storage_name: linstor_storage
-#pve_linstor_storage_name: linstor_storage_1
+#linstor_ha_storage_pool: linstor
 
 # Proxmox API
 api_host: "dl380-1.internal"

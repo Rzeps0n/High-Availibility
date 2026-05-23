@@ -22,7 +22,6 @@
       - linstor-satellite
       - linstor-client
       - linstor-proxmox
-      - linstor-gui
     state: present
     update_cache: true
 
@@ -108,7 +107,7 @@
       ansible.builtin.command:
         cmd: |
           linstor resource-group list
-      register: pve_linstor_rg_check
+      register: pve_linstor_rg_check | grep "{{ linstor_rg_name }}"
       changed_when: false
       when:
         - inventory_hostname in groups['master']
@@ -117,10 +116,10 @@
     - name: Create resource group (master only)
       changed_when: true
       ansible.builtin.command: |
-        linstor resource-group create {{ linstor_rg_name }} --storage-pool=linstor --place-count={{ pve_linstor_place_count }}
+        linstor resource-group create {{ linstor_rg_name }} --storage-pool=linstor --place-count={{ groups['nodes'] | length }}
       when:
         - inventory_hostname in groups['master']
-        - "'StoragePool(s): linstor' not in pve_linstor_rg_check.stdout"
+        - pve_linstor_rg_check.rc != 0
 
     - name: Check if linstor volume-group already exists
       ansible.builtin.command:
